@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+       <bean id="single" class="main.Single">
+              <property name="str" value="String"/>
+       </bean>
+
+       <!-- нужно создать bean кдасса Recomend-->
+       <!-- также нужно создать bean стандартного класса Spring - proxy-->
+       <bean id="recomendID" class="main.Recomend"/>
+
+       <bean id="proxy" class="org.springframework.aop.framework.ProxyFactoryBean">
+              <property name="target" ref="single"/>
+              <property name="interceptorNames">
+                     <list>
+                            <value>recomendID</value>
+                            <value>recomendAfterID</value>
+                            <value>recomendAroundID</value>
+                            <value>recomendThrowsID</value>
+
+                            <value>adviceID</value>
+                     </list>
+              </property>
+       </bean>
+
+       <bean id="recomendAfterID" class="main.RecomendAfter"/>
+
+       <bean id="recomendAroundID" class="main.RecomendAround"/>
+
+       <bean id="recomendThrowsID" class="main.RecomendThrows"/>
+
+       <!-- чтобы указать, какой именно метод будет использоваться-->
+       <bean id="pointcutID" class="org.springframework.aop.support.NameMatchMethodPointcut">
+              <property name="mappedName" value="getStr"/>
+       </bean>
+
+       <!-- bean связи рекомендации и pointcut-->
+       <bean id="adviceID" class="org.springframework.aop.support.DefaultPointcutAdvisor">
+              <!-- указываем bean, где метод-->
+              <property name="pointcut" ref="pointcutID"/>
+              <property name="advice" ref="recomendID"/>
+       </bean>
+</beans>
